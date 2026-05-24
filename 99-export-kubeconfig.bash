@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # =============================================================================
-# 00-1-export-kubeconfig.sh
+# 99-export-kubeconfig.bash
 # Setup and export KUBECONFIG from k3s
-# Usage: source scripts/bash/00-1-export-kubeconfig.sh
+# Usage: source 99-export-kubeconfig.bash
 # =============================================================================
 
 # -----------------------------------------------------------------------------
@@ -10,11 +10,17 @@
 # -----------------------------------------------------------------------------
 (return 0 2>/dev/null) || {
   echo "❌  Please source this script instead of running it directly."
-  echo "    Usage: source scripts/bash/00-1-export-kubeconfig.sh"
+  echo "    Usage: source 99-export-kubeconfig.bash"
   exit 1
 }
 
-source "$(dirname "${BASH_SOURCE[0]}")/../libs/pretty-log.bash"
+# Simple logging functions
+step() { echo ""; echo "==> $1"; }
+log() { echo "    $1"; }
+success() { echo "✅  $1"; }
+warn() { echo "⚠️  $1"; }
+err() { echo "❌  $1"; return 1; }
+kv() { echo "    $1 $2"; }
 
 KUBECONFIG_PATH="$HOME/.kube/config"
 K3S_CONFIG="/etc/rancher/k3s/k3s.yaml"
@@ -33,7 +39,7 @@ else
   # Check 2: ~/.kube/config exists and works
   # -----------------------------------------------------------------------------
   if [[ -f "$KUBECONFIG_PATH" ]] && KUBECONFIG="$KUBECONFIG_PATH" kubectl cluster-info &>/dev/null 2>&1; then
-    log "Found existing kubeconfig at ${_C_CYAN}${KUBECONFIG_PATH}${_RESET} — skipping copy."
+    log "Found existing kubeconfig at ${KUBECONFIG_PATH} — skipping copy."
     export KUBECONFIG="$KUBECONFIG_PATH"
     kv "KUBECONFIG:" "$KUBECONFIG"
 
@@ -43,9 +49,10 @@ else
     # -----------------------------------------------------------------------------
     if [[ ! -f "$K3S_CONFIG" ]]; then
       err "k3s config not found at ${K3S_CONFIG}. Is k3s installed and running?"
+      return 1
     fi
 
-    log "Copying k3s config to ${_C_CYAN}${KUBECONFIG_PATH}${_RESET}..."
+    log "Copying k3s config to ${KUBECONFIG_PATH}..."
 
     mkdir -p "$HOME/.kube"
     sudo cp "$K3S_CONFIG" "$KUBECONFIG_PATH"
@@ -78,5 +85,5 @@ _GIT_EMAIL="${_GIT_USER}@${_GIT_HOST}"
 git config --global user.name  "$_GIT_USER"
 git config --global user.email "$_GIT_EMAIL"
 
-log "git user.name:  ${_C_CYAN}${_GIT_USER}${_RESET}"
-log "git user.email: ${_C_CYAN}${_GIT_EMAIL}${_RESET}"
+log "git user.name:  ${_GIT_USER}"
+log "git user.email: ${_GIT_EMAIL}"

@@ -10,7 +10,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: git-sync
-          image: asia-southeast1-docker.pkg.dev/its-artifact-commons/utils/git-sync:v0.0.2
+          image: biovanta2002/werewolf-git-sync:main-0f49f46
           command:
             - /bin/sh
             - -c
@@ -47,14 +47,14 @@ spec:
               ruby git-sync.rb
           env:
             - name: GIT_SOURCE_TEMPLATE
-              value: "https://github.com/wintech-thai/{repo}.git"
+              value: "https://github.com/bio-vanta/{repo}.git"
 
             - name: GIT_DEST_TEMPLATE
               value: "http://gitea-http.gitea.svc.cluster.local:3000/{repo}.git"
 
             ### Source ###
             - name: GIT_SOURCE_REPO1
-              value: "please-protect-rproxy-data-plane"
+              value: "werewolf-k3s-proxy-data-plane"
 
             - name: GIT_SOURCE_REPO2
               value: "" # Skip control plane

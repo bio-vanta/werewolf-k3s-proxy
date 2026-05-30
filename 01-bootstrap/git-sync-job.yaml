@@ -57,10 +57,10 @@ spec:
               value: "werewolf-k3s-proxy-data-plane"
 
             - name: GIT_SOURCE_REPO2
-              value: "" # Skip control plane
+              value: "local/control-plane-dev" # Skip control plane
 
             - name: GIT_SOURCE_REPO3
-              value: "" # Skip control plane
+              value: "local/control-plane-prod" # Skip control plane
 
 
             - name: GIT_SOURCE_REF_TYPE1
@@ -87,10 +87,10 @@ spec:
               value: "local/data-plane"
 
             - name: GIT_DEST_REPO2
-              value: "local/control-plane-dev"
+              value: ""
 
             - name: GIT_DEST_REPO3
-              value: "local/control-plane-prod"
+              value: ""
 
 
             - name: GIT_DEST_REF_NAME1
